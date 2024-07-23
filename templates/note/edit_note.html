@@ -1,0 +1,15 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Éditer la note de {{ note.eleve.nom }} {{ note.eleve.prenom }} pour le contrôle : {{ note.controle.matiere.nom }} - {{ note.controle.type }}</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Sauvegarder</button>
+    </form>
+
+    <a href="{% url 'students_notes' controle_id=note.controle.id %}" class="btn btn-secondary mt-3">Retour</a>
+</div>
+{% endblock %}

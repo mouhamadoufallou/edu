@@ -1,0 +1,32 @@
+{% extends "base/base.html" %}
+
+{% block title %}Liste des Matières{% endblock title %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Matières de la Classe {{ classe.nom }}</h2>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Nom de la Matière</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for matiere in matieres %}
+                <tr>
+                    <td>{{ matiere.nom }}</td>
+                    <td>
+                        <a href="{% url 'edit_matiere' matiere.id %}" class="btn btn-warning btn-sm">Éditer</a>
+                        <a href="{% url 'delete_matiere' matiere.id %}" class="btn btn-danger btn-sm">Supprimer</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <a href="{% url 'add_matiere' classe.id %}" class="btn btn-primary btn-sm mt-4">Ajouter une Matière</a>
+    <a href="{% url 'add_matiere_by_classe' %}" class="btn btn-secondary btn-sm mt-4">Retour</a>
+</div>
+{% endblock content %}

@@ -1,0 +1,74 @@
+{% extends "base/base.html" %}
+
+{% block title %}Ajouter un utilisateur{% endblock title %}
+
+{% block content %}
+<div class="col-md-12">  
+    <div class="container">  
+        <div class="col-12">  
+        <h3>Ajouter un utilisateur</h3>  
+        </div>    
+        
+        {% if msg %}
+            <div class="alert alert-info">{{ msg }}</div>
+        {% endif %}
+        
+        <form method="POST" class="post-form" enctype="multipart/form-data">    
+        {% csrf_token %}  
+        
+        <div class="mb-3">
+            <label for="id_username">Nom d'utilisateur:</label>
+            {{ form.username }}
+        </div>
+        
+        <div class="mb-3">
+            <label for="id_email">Email:</label>
+            {{ form.email }}
+        </div>
+        
+        <div class="mb-3">
+            <label for="id_password1">Mot de passe:</label>
+            {{ form.password1 }}
+        </div>
+        
+        <div class="mb-3">
+            <label for="id_password2">Confirmer le mot de passe:</label>
+            {{ form.password2 }}
+        </div>
+
+        <div class="mb-3">
+            <label class="control control--checkbox">
+                <span class="caption">Admin</span>
+                {{ form.is_admin }}
+                <div class="control__indicator"></div>
+            </label>
+        </div>
+        
+        <div class="mb-3">
+            <label class="control control--checkbox">
+                <span class="caption">Student</span>
+                {{ form.is_student }}
+                <div class="control__indicator"></div>
+            </label>
+        </div>
+        
+        <div class="mb-3">
+            <label class="control control--checkbox">
+                <span class="caption">Teacher</span>
+                {{ form.is_teacher }}
+                <div class="control__indicator"></div>
+            </label>
+        </div>
+
+        <div class="mb-3">
+            <button type="submit" class="btn btn-primary">Soumettre</button>    
+        </div> 
+
+        <div class="text-error">
+            {{ form.errors }}
+        </div>
+        
+        </form>  
+    </div>  
+</div> 
+{% endblock content %}

@@ -1,0 +1,47 @@
+{% extends "base/base.html" %}
+
+{% block title %}Absences des Élèves{% endblock title %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-body">
+            <h3 class="text-center mb-4">Absences des Élèves - Classe {{ classe }}</h3>
+
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Nom</th>
+                            <th>Prénom</th>
+                            <th>Classe</th>
+                            <th>Nombre d'absences</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for eleve in eleves %}
+                            <tr>
+                                <td>{{ eleve.id }}</td>
+                                <td>{{ eleve.nom }}</td>
+                                <td>{{ eleve.prenom }}</td>
+                                <td>{{ eleve.classe }}</td>
+                                <td>{{ eleve.nb_abscences }}</td>
+                                <td>
+                                    <a href="{% url 'detail_abscence' eleve.id %}" class="btn btn-primary btn-sm mx-1">Voir détails</a>
+                                    <a href="{% url 'ajouter_abscence' eleve.id %}" class="btn btn-danger btn-sm mx-1">Ajouter</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="text-center mt-4">
+                <a href="{% url 'home' %}" class="btn btn-secondary">Retour</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

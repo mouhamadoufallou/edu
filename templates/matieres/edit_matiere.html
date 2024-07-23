@@ -1,0 +1,19 @@
+{% extends "base/base.html" %}
+
+{% block title %}Éditer Matière{% endblock title %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Éditer Matière</h2>
+    
+    <!-- Formulaire d'édition -->
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success">Enregistrer</button>
+    </form>
+
+    <!-- Bouton Annuler -->
+    <a href="#" class="btn btn-secondary mt-3">Annuler</a>
+</div>
+{% endblock content %}

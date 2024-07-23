@@ -1,0 +1,109 @@
+{% load static %}
+<div class="sidebar">
+    <nav class="sidebar-nav">
+        <ul class="nav">
+            <li class="nav-item">
+                <a class="nav-link" href="#"><i class="icon-speedometer"></i> Dashboard</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'show_classe' %}">
+                    <i class="nav-icon icon-puzzle"></i>Classes</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'add_matiere_by_classe' %}">
+                    <i class="nav-icon icon-puzzle"></i>Matieres</a>
+            </li>
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle" href="#">
+                    <i class="nav-icon icon-user"></i>Gestion élève</a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'show_list_by_classe' %}">
+                            <i class="nav-icon icon-puzzle"></i> liste des élèves</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{%url 'show_abscence_by_classe' %}">
+                            <i class="nav-icon icon-puzzle"></i> Abscence</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'show_notes' %}">
+                            <i class="nav-icon icon-puzzle"></i> Note</a>
+                    </li>
+                        
+                </ul>
+            </li>
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle" href="#">
+                    <i class="nav-icon icon-user"></i>Gestion professeur</a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'show_teacher' %}">
+                            <i class="nav-icon icon-puzzle"></i>Liste des professeurs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'add_teacher' %}">
+                            <i class="nav-icon icon-puzzle"></i> Liste des absences</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle" href="#">
+                    <i class="nav-icon icon-user"></i>Calendrier</a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="nav-icon icon-puzzle"></i> Composition</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="nav-icon icon-puzzle"></i> Évènement Scolaire</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle" href="#">
+                    <i class="nav-icon icon-user"></i>Gestion utilisateurs</a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="nav-icon icon-puzzle"></i> Liste des utilisateurs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'add_user' %}">
+                            <i class="nav-icon icon-puzzle"></i> Ajouter un nouvel utilisateur</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+    <button class="sidebar-minimizer brand-minimizer" type="button"></button>
+
+    {% block sidebar %}
+    {% endblock %}
+</div>
+
+<script>
+document.getElementById('class-selector').addEventListener('change', function() {
+    var selectedOption = this.options[this.selectedIndex];
+    var url = selectedOption.getAttribute('data-url');
+    if (url) {
+        window.location.href = url;
+    }
+});
+
+document.getElementById('absence-class-selector').addEventListener('change', function() {
+    var selectedOption = this.options[this.selectedIndex];
+    var url = selectedOption.getAttribute('data-url');
+    if (url) {
+        window.location.href = url;
+    }
+});
+
+document.getElementById('note-class-selector').addEventListener('change', function() {
+    var selectedOption = this.options[this.selectedIndex];
+    var url = selectedOption.getAttribute('data-url');
+    if (url) {
+        window.location.href = url;
+    }
+});
+</script>

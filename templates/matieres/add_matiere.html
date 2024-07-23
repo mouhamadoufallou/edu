@@ -1,0 +1,23 @@
+{% extends "base/base.html" %}
+
+{% block title %}Ajouter une Matière{% endblock title %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Ajouter une Matière à la Classe {{ classe.nom }}</h2>
+    
+    <!-- Formulaire d'ajout de matière -->
+    <div class="card p-4">
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ form.as_p }}
+            </div>
+            <button type="submit" class="btn btn-primary">Ajouter</button>
+        </form>
+    </div>
+
+    <!-- Bouton de retour -->
+    <a href="{% url 'add_matiere_by_classe' %}" class="btn btn-secondary mt-3">Annuler</a>
+</div>
+{% endblock content %}

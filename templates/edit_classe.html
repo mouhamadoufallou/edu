@@ -1,0 +1,18 @@
+{% extends "base/base.html" %}
+
+{% block title %}Modifier Classe{% endblock title %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Modifier Classe</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="id_nom">Nom de la Classe:</label>
+            {{ form.nom }}
+        </div>
+        <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+        <a href="{% url 'show_classe' %}" class="btn btn-secondary">Annuler</a>
+    </form>
+</div>
+{% endblock content %}

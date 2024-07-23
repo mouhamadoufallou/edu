@@ -1,0 +1,12 @@
+{% extends "base/base.html" %}
+  
+{% block title %}Ajouter une Absence{% endblock title %}
+  
+{% block content %}
+<h1>Modifier l'absence de {{ eleve.nom }} {{ eleve.prenom }}</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Enregistrer les modifications</button>
+</form>
+{% endblock content %}

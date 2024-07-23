@@ -1,0 +1,35 @@
+{% extends "base/base.html" %}
+  
+{% block title %}Employee Records{% endblock title %}
+  
+{% block content %}
+ <div class="col-md-12">
+        <span><a href="{% url 'add_employe' %}" class="btn btn-primary">Add New Employe</a></span>  
+        <div class="table-responsive">
+        <table id="bootstrapdatatable" class="table table-striped table-bordered" width="100%">
+        <thead>
+            <th><input type="checkbox" id="checkall" /></th>
+            <th>ID</th>
+            <th>Employee Name</th>
+            <th>Employee Email</th>
+            <th>Employee Contact</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </thead>
+        <tbody>
+        {% for employee in employees %}  
+            <tr>  
+            <td><input type="checkbox" class="checkthis" /></td>
+            <td>{{ employee.id }}</td>  
+            <td>{{ employee.name }}</td>  
+            <td>{{ employee.email }}</td>  
+            <td>{{ employee.contact }}</td>  
+            <td><a href="{% url 'edit_employe' employee.id %}" class="btn btn-primary">Edit</a></td>
+            <td><a href="{% url 'destroy_employe' employee.id %}" class="btn btn-danger">Delete</a></td>  
+            </tr>  
+        {% endfor %} 
+        </tbody>
+        </table>
+        </div>
+    </div>
+{% endblock content %}

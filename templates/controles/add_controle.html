@@ -1,0 +1,14 @@
+{% extends "base/base.html" %}
+
+{% block title %}Ajouter un Contrôle{% endblock title %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Ajouter un Contrôle{% if classe %} pour la classe {{ classe.nom }}{% endif %}</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Ajouter</button>
+    </form>
+</div>
+{% endblock content %}

@@ -1,0 +1,52 @@
+{% load static %}
+<div class="sidebar">
+    <nav class="sidebar-nav">
+        <ul class="nav">
+            <li class="nav-item">
+                <a class="nav-link" href="#"><i class="icon-speedometer"></i> Dashboard</a>
+            </li>
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle" href="#">
+                    <i class="nav-icon icon-user"></i> Elève</a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'show_eleves' %}">
+                            <i class="nav-icon icon-puzzle"></i> Liste des Élève</a>
+                    </li>                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="nav-icon icon-puzzle"></i>Liste des Classes</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle" href="#">
+                    <i class="nav-icon icon-user"></i>Absence</a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="nav-icon icon-puzzle"></i> Liste des absences</a>
+                    </li>                    
+                </ul>
+            </li>
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle" href="#">
+                    <i class="nav-icon icon-user"></i>Calendrier</a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="nav-icon icon-puzzle"></i> Composition</a>
+                    </li>                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="nav-icon icon-puzzle"></i> Evènement Scolaire</a>
+                    </li>
+                </ul>
+            </li>
+    </nav>
+    <button class="sidebar-minimizer brand-minimizer" type="button"></button>
+
+    {% block sidebar %}
+    {% endblock %}
+</div>
+

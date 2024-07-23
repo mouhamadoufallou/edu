@@ -1,0 +1,103 @@
+{% extends "base/base.html" %}
+  
+{% block title %}Add New Employee Records{% endblock title %}
+  
+{% block content %}
+<div class="col-md-12">
+    <form method="POST" class="post-form" action="{% url 'update_eleve' eleve.id %}" enctype="multipart/form-data">  
+    {% csrf_token %}  
+    <div class="container">   
+        <div class="col-12">  
+            <h3>Update Details</h3>  
+        </div> 
+        
+        <div class="mb-3">
+            <label for="id_id">ID:</label>
+            <input type="text" class="form-control" name="id" id="id_id" required maxlength="20" value="{{ eleve.id }}" readonly />
+        </div>
+        
+        <div class="mb-3">
+            <label for="id_nom">Nom:</label>
+            <input type="text" class="form-control" name="nom" id="id_nom" required maxlength="100" value="{{ eleve.nom }}" />
+        </div>
+        
+        <div class="mb-3">
+            <label for="id_prenom">Prénom:</label>
+            <input type="text" class="form-control" name="prenom" id="id_prenom" required maxlength="100" value="{{ eleve.prenom }}" />
+        </div>
+        
+        <div class="mb-3">
+            <label for="id_cin_eleve">CIN:</label>
+            <input type="text" class="form-control" name="cin_eleve" id="id_cin_eleve" required maxlength="20" value="{{ eleve.cin_eleve }}" />
+        </div>
+        
+        <div class="mb-3">
+            <label for="id_sexe">Sexe:</label>
+            <input type="text" class="form-control" name="sexe" id="id_sexe" required maxlength="10" value="{{ eleve.sexe }}" />
+        </div>
+        
+        <div class="mb-3">
+            <label for="id_date_naissance">Date de Naissance:</label>
+            <input type="date" class="form-control" name="date_naissance" id="id_date_naissance" required value="{{ eleve.date_naissance|date:'Y-m-d' }}" />
+        </div>
+        
+        <div class="mb-3">
+            <label for="id_lieu_naissance">Lieu de Naissance:</label>
+            <input type="text" class="form-control" name="lieu_naissance" id="id_lieu_naissance" required maxlength="100" value="{{ eleve.lieu_naissance }}" />
+        </div>
+        
+        <div class="mb-3">
+            <label for="id_photo_profil">Photo de Profil:</label>
+            <input type="file" class="form-control-file" name="photo_profil" id="id_photo_profil" accept="image/*">
+            {% if eleve.photo_profil %}
+            <img src="{{ eleve.photo_profil.url }}" class="mt-2" style="max-width: 200px;">
+            {% endif %}
+        </div>
+        
+        <div class="mb-3">
+            <label for="id_date_admission">Date d'Admission:</label>
+            <input type="date" class="form-control" name="date_admission" id="id_date_admission" required value="{{ eleve.date_admission|date:'Y-m-d' }}" />
+        </div>
+        
+        <div class="mb-3">
+            <label for="id_classe">Classe:</label>
+            <input type="text" class="form-control" name="classe" id="id_classe" required maxlength="50" value="{{ eleve.classe }}" />
+        </div>
+        
+        <div class="mb-3">
+            <label for="id_niveau_scolaire">Niveau Scolaire:</label>
+            <input type="text" class="form-control" name="niveau_scolaire" id="id_niveau_scolaire" required maxlength="50" value="{{ eleve.niveau_scolaire }}" />
+        </div>
+        
+        <div class="mb-3">
+            <label for="id_nom_parent">Nom du Parent:</label>
+            <input type="text" class="form-control" name="nom_parent" id="id_nom_parent" required maxlength="100" value="{{ eleve.nom_parent }}" />
+        </div>
+        
+        <div class="mb-3">
+            <label for="id_prenom_parent">Prénom du Parent:</label>
+            <input type="text" class="form-control" name="prenom_parent" id="id_prenom_parent" required maxlength="100" value="{{ eleve.prenom_parent }}" />
+        </div>
+        
+        <div class="mb-3">
+            <label for="id_date_naissance_parent">Date de Naissance du Parent:</label>
+            <input type="date" class="form-control" name="date_naissance_parent" id="id_date_naissance_parent" required value="{{ eleve.date_naissance_parent|date:'Y-m-d' }}" />
+        </div>
+        
+        <div class="mb-3">
+            <label for="id_lieu_naissance_parent">Lieu de Naissance du Parent:</label>
+            <input type="text" class="form-control" name="lieu_naissance_parent" id="id_lieu_naissance_parent" required maxlength="100" value="{{ eleve.lieu_naissance_parent }}" />
+        </div>
+        
+        <div class="mb-3">
+            <label for="id_tel_parent">Téléphone du Parent:</label>
+            <input type="text" class="form-control" name="tel_parent" id="id_tel_parent" required maxlength="20" value="{{ eleve.tel_parent }}" />
+        </div>
+        
+        
+        <div class="mb-3"> 
+            <button type="submit" class="btn btn-success btn-lg">Update</button>  
+        </div> 
+    </div>  
+    </form>  
+{% endblock content %}   

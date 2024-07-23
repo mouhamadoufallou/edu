@@ -1,0 +1,44 @@
+{% extends "base/base.html" %}
+
+{% block title %}Liste des Contrôles{% endblock title %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Contrôles de la Classe {{ classe.nom }}</h2>
+    
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Matière</th>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for controle in controles %}
+                <tr>
+                    <td>{{ controle.matiere.nom }}</td>
+                    <td>{{ controle.date }}</td>
+                    <td>{{ controle.type }}</td>
+                    <td>{{ controle.description }}</td>
+                    <td>
+                        <a href="{% url 'edit_controle' controle.id %}" class="btn btn-warning btn-sm">Éditer</a>
+                        <a href="{% url 'delete_controle' controle.id %}" class="btn btn-danger btn-sm">Supprimer</a>
+                        <a href="{% url 'add_notes_for_all_students' controle.id %}" class="btn btn-primary btn-sm">Ajouter des notes</a>
+                        <a href="{% url 'students_notes' controle.id %}" class="btn btn-info btn-sm">Voir les notes</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="mt-4">
+        <a href="{% url 'add_controle' classe.id %}" class="btn btn-primary">Ajouter un Contrôle</a>
+        <a href="{% url 'show_matiere_by_classe' classe.id %}" class="btn btn-secondary">Retour aux Matières</a>
+    </div>
+</div>
+{% endblock content %}
