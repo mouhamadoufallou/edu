@@ -1,0 +1,66 @@
+{% extends "base/base.html" %}
+  
+{% block title %}Composition {{ classe.nom }}{% endblock title %}
+  
+{% block content %}
+<div class="container mt-4">
+    <div class="mb-3">
+        <a href="{% url 'add_composition' classe.id %}" class="btn btn-primary">Ajouter une Composition</a>
+    </div>
+
+    <h2 class="mb-4">Composition de {{classe.nom}}</h2>
+    
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Date de Début</th>
+                    <th>Date de Fin</th>
+                    <th>Image</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for composition in composition %}
+                <tr>
+                    <td>{{ composition.date_debut }}</td>
+                    <td>{{ composition.date_fin }}</td>
+                    <td>
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#imageModal" onclick="document.getElementById('modalImage').src='{{ composition.img.url }}'">
+                            <img src="{{ composition.img.url }}" alt="composition" style="width: 100px; height: auto;">
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{% url 'edit_composition' composition.id %}" class="btn btn-warning btn-sm">Modifier</a>
+                        <a href="{% url 'delete_composition' composition.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet emploi du temps ?');">Supprimer</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4">Aucun emploi du temps disponible pour cette classe.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="imageModalLabel">Image de la composition</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <img id="modalImage" src="" alt="Emploi du temps" style="width: 100%; height: auto;">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

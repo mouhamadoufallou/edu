@@ -5,20 +5,26 @@
             <li class="nav-item">
                 <a class="nav-link" href="#"><i class="icon-speedometer"></i> Dashboard</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'show_classe' %}">
-                    <i class="nav-icon icon-puzzle"></i>Classes</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'add_matiere_by_classe' %}">
-                    <i class="nav-icon icon-puzzle"></i>Matieres</a>
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle" href="#">
+                    <i class="nav-icon icon-user"></i>Gestion de l'école</a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'show_classe' %}">
+                            <i class="nav-icon icon-puzzle"></i>Classes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'add_matiere_by_classe' %}">
+                            <i class="nav-icon icon-puzzle"></i>Matieres</a>
+                    </li>
+                </ul>
             </li>
             <li class="nav-item nav-dropdown">
                 <a class="nav-link nav-dropdown-toggle" href="#">
                     <i class="nav-icon icon-user"></i>Gestion élève</a>
                 <ul class="nav-dropdown-items">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'show_list_by_classe' %}">
+                        <a class="nav-link" href="{% url 'show_list_eleve_by_classe' %}">
                             <i class="nav-icon icon-puzzle"></i> liste des élèves</a>
                     </li>
                     <li class="nav-item">
@@ -37,12 +43,12 @@
                     <i class="nav-icon icon-user"></i>Gestion professeur</a>
                 <ul class="nav-dropdown-items">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'show_teacher' %}">
+                        <a class="nav-link" href="{% url 'show_list_professeur_by_classe' %}">
                             <i class="nav-icon icon-puzzle"></i>Liste des professeurs</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'add_teacher' %}">
-                            <i class="nav-icon icon-puzzle"></i> Liste des absences</a>
+                        <a class="nav-link" href="{% url 'show_abscence_prof_by_classe' %}">
+                            <i class="nav-icon icon-puzzle"></i> Absences</a>
                     </li>
                 </ul>
             </li>
@@ -51,7 +57,11 @@
                     <i class="nav-icon icon-user"></i>Calendrier</a>
                 <ul class="nav-dropdown-items">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="{%url 'show_emplois_du_temps_by_classe'%}">
+                            <i class="nav-icon icon-puzzle"></i> Emploi du temps</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{%url 'show_composition_by_classe'%}">
                             <i class="nav-icon icon-puzzle"></i> Composition</a>
                     </li>
                     <li class="nav-item">

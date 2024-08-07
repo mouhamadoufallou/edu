@@ -142,3 +142,117 @@ class Note(models.Model):
 
     def __str__(self):
         return f"{self.eleve.prenom} {self.eleve.nom} - {self.controle.matiere.nom}: {self.note}"
+
+
+class Professeur(models.Model):
+    nom = models.CharField(max_length=100)
+    prenom = models.CharField(max_length=100)
+    date_naissance = models.DateField()
+    sexe_choice = (
+        ("masculin", "Masculin"),
+        ("feminin", "Feminin"),
+    )
+    sexe = models.CharField(choices=sexe_choice, max_length=10)
+    lieu_naissance = models.CharField(max_length=100)
+    tel = models.CharField(max_length=15)
+    photo_profil = models.ImageField(upload_to='photos')
+    #email = models.EmailField(unique=True)
+    user_username = models.CharField(max_length=150, blank=True, null=True)
+    user_email = models.EmailField(blank=True, null=True)
+    user_password = models.CharField(max_length=150, blank=True, null=True)
+    classe = models.ForeignKey(Classe, on_delete=models.CASCADE, related_name='professeurs')
+
+
+    def __str__(self):
+        return f"{self.prenom} {self.nom}"
+    
+    def save(self, *args, **kwargs):
+        created = not self.pk  # Check if the instance is being created (not updated)
+        super(Professeur, self).save(*args, **kwargs)
+
+        # Génération du nom d'utilisateur, email, et mot de passe (logique inchangée)
+        base_username = f"{self.prenom.lower()}{self.nom.lower()}"
+        username = base_username
+        email = f"{username}@example.com"
+        password = generate_random_password()
+
+        user_exists = CustomUser.objects.filter(username=username).exists()
+        suffix = 1
+
+        # Boucle pour générer un nom d'utilisateur unique
+        while user_exists:
+            username = f"{base_username}{suffix}"
+            user_exists = CustomUser.objects.filter(username=username).exists()
+            suffix += 1
+
+        try:
+            user = CustomUser.objects.get(username=username)
+            # L'utilisateur existe, mettre à jour ses informations
+            user.email = email
+            user.set_password(password)
+        except CustomUser.DoesNotExist:
+            # L'utilisateur n'existe pas, créer un nouvel utilisateur
+            user = CustomUser.objects.create_user(
+                username=username,
+                email=email,
+                password=password
+            )
+            user.is_student = True
+
+        user.save()
+
+        self.user_username = username
+        self.user_email = email
+        self.user_password = password
+        super(Professeur, self).save(*args, **kwargs)
+        
+    # Créer une absence par défaut si l'élève est nouvellement créé
+        if created:
+            AbscenceProfesseur.objects.create(professeur=self, type='non-justifiée')
+
+    
+class AbscenceProfesseur(models.Model):
+    professeur = models.ForeignKey(Professeur, on_delete=models.CASCADE, related_name='abscences')
+    date = models.DateField(default='2000-02-02')
+    type_choices = (("Justifier", "Justifier"),
+                    ("Non-justifier", "Non-justifier"))
+    type = models.CharField(max_length=20, choices=type_choices, default='Non-justifier')
+
+    def update_absence(self, date, type):
+        self.date = date
+        self.type = type
+        self.save()
+
+    class Meta:
+        db_table = "tblabsencesprofesseurs"
+        ordering = ['date']
+class EmploiDuTemps(models.Model):
+    classe = models.ForeignKey(Classe, on_delete=models.CASCADE, related_name='emplois_du_temps')
+    img = models.ImageField(upload_to='photos/')
+    date_debut = models.DateField()
+    date_fin = models.DateField()
+
+    def __str__(self):
+        return f"Emploi du temps de {self.classe.nom} du {self.date_debut} au {self.date_fin}"
+    
+class Composition(models.Model):
+    classe = models.ForeignKey(Classe, on_delete=models.CASCADE, related_name='composition')
+    img = models.ImageField(upload_to='photos/')
+    date_debut = models.DateField()
+    date_fin = models.DateField()
+
+    def __str__(self):
+        return f"Composition de le classe de {self.classe.nom} du {self.date_debut} au {self.date_fin}"
+    
+class AnneScolaire(models.Model):
+    annee = models.CharField(max_length=10, unique=True, help_text="Année scolaire au format '2023-2024'")
+    date_debut = models.DateField(help_text="Date de début de l'année scolaire")
+    date_fin = models.DateField(help_text="Date de fin de l'année scolaire")
+    actif = models.BooleanField(default=True, help_text="Indique si l'année scolaire est actuellement active")
+
+    def __str__(self):
+        return self.annee
+
+    class Meta:
+        verbose_name = "Année Scolaire"
+        verbose_name_plural = "Années Scolaires"

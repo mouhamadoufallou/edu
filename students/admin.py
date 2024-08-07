@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Eleve, AbscenceEleve
+from .models import *
 """
 # Register your models here.
 
@@ -27,3 +27,17 @@ class EleveAdmin(admin.ModelAdmin):
     list_filter = ('classe',)
     # Ajoutez d'autres champs à utiliser pour la recherche
     search_fields = ('nom', 'prenom', 'cin_eleve')
+    
+@admin.register(Classe)
+class ClasseAdmin(admin.ModelAdmin):
+    list_display = ('nom',)
+
+@admin.register(EmploiDuTemps)
+class EmploiDuTempsAdmin(admin.ModelAdmin):
+    list_display = ('classe', 'date_debut', 'date_fin')
+    
+@admin.register(AnneScolaire)
+class AnneScolaireAdmin(admin.ModelAdmin):
+    list_display = ('annee', 'date_debut', 'date_fin', 'actif')
+    list_filter = ('actif',)
+    search_fields = ('annee',)

@@ -1,6 +1,6 @@
 {% extends "base/base.html" %}
   
-{% block title %}Détails du Professeur{% endblock title %}
+{% block title %}Détails de Teacher{% endblock title %}
   
 {% block content %}
 <div class="col-md-12">
@@ -8,64 +8,62 @@
         <div class="card">
             <div class="card-body">
                 <div class="col-12">
-                    <h3 class="text-center mb-4">Détails Teacher</h3>
+                    <h3 class="text-center mb-4">Détails du professeur</h3>
                 </div>
 
                 <div class="table-responsive">
                     <table class="table table-bordered">
-                        <!-- Section for Teacher Information -->
-                        <tr>
-                            <td colspan="2">
-                                {% if Professeur.photo_profil %}
-                                    <img src="{{ Professeur.photo_profil.url }}" class="mt-2 img-fluid rounded" style="max-width: 200px;">
-                                {% else %}
-                                    <p>Pas de photo</p>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">
-                                <h5>Informations Teacher :</h5>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">ID</th>
-                            <td>{{ teacher.id }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Nom</th>
-                            <td>{{ teacher.nom }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Prénom</th>
-                            <td>{{ teacher.prenom }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">CIN</th>
-                            <td>{{ teacher.cin_professeur }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Sexe</th>
-                            <td>{{ teacher.get_sexe_display }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Date de Naissance</th>
-                            <td>{{ teacher.date_naissance|date:"d/m/Y" }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Lieu de Naissance</th>
-                            <td>{{ teacher.lieu_naissance }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Niveau d'Enseignement</th>
-                            <td>{{ teacher.niveau_enseignement }}</td>
-                        </tr>
-                    </table>
-                </div>
+                        <!-- Section for Student Information -->
+                            <tr>
+                                <td colspan="2" class="text-center">
+                                    {% if professeur.photo_profil %}
+                                        <img src="{{ professeur.photo_profil.url }}" class="mt-2 img-fluid rounded" style="max-width: 200px;">
+                                    {% else %}
+                                        <p>Pas de photo</p>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">ID</th>
+                                <td>{{ professeur.id }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Nom</th>
+                                <td>{{ professeur.nom }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Prénom</th>
+                                <td>{{ professeur.prenom }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Sexe</th>
+                                <td>{{ professeur.get_sexe_display }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Date de Naissance</th>
+                                <td>{{ professeur.date_naissance|date:"d/m/Y" }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Lieu de Naissance</th>
+                                <td>{{ professeur.lieu_naissance }}</td>
+                            </tr>
+
+                        <!-- Section for School Information -->
+                            <tr>
+                                <td colspan="2" class="text-center">
+                                    <h4>Informations de l'école :</h4>
+                                </td>
+                            <tr>
+                                <th scope="row">Classe</th>
+                                <td>{{ professeur.classe }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Téléphone </th>
+                                <td>{{ professeur.tel }}</td>
+                            </tr>
 
                 <div class="text-center mt-4">
-                    <a href="{% url 'edit_teacher' teacher.id %}" class="btn btn-primary mx-2">Édite</a>
-                    <a href="{% url 'destroy_teacher' teacher.id %}" class="btn btn-danger mx-2">Delete</a>
+                    <a href="{% url 'edit_professeur' professeur.id %}" class="btn btn-primary mx-2">Éditer</a>
                 </div>
             </div>
         </div>

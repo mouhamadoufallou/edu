@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import EleveForm, AbscenceEleveForm, ClasseForm, MatiereForm, ControleForm, NoteForm
-from .models import Eleve, AbscenceEleve, Classe, Matiere, Controle, Note
+from .forms import *
+from .models import *
 from django.forms import modelformset_factory
 
 def add_classe(request):
@@ -17,9 +17,9 @@ def show_classe(request):
     classes = Classe.objects.all()
     return render(request, 'show_classe.html', {'classes': classes})
 
-def show_list_by_classe(request):
+def show_list_eleve_by_classe(request):
     classes = Classe.objects.all()
-    return render(request, 'show_list_by_classe.html', {'classes': classes})
+    return render(request, 'show_list_eleve_by_classe.html', {'classes': classes})
 
 def edit_classe(request, id):
     classe = get_object_or_404(Classe, id=id)
@@ -47,7 +47,7 @@ def add_eleve(request, classe_id=None):
                 classe = get_object_or_404(Classe, id=classe_id)
                 eleve.classe = classe
             eleve.save()
-            return redirect('show_eleves')
+            return redirect('show_eleves_by_class', classe_id = classe_id)
     else:
         form = EleveForm()
     
@@ -72,30 +72,22 @@ def show_eleves_by_class(request, classe_id):
 
 def edit_eleve(request, id):
     eleve = Eleve.objects.get(id=id)
+    classe_id = eleve.classe.id  # Extrait l'ID de la classe du professeur
+
     if request.method == "POST":
         form = EleveForm(request.POST, request.FILES, instance=eleve)
         if form.is_valid():
             form.save()
-            return redirect('show_eleves')
+            return redirect('show_eleves_by_class', classe_id = classe_id)
     else:
         form = EleveForm(instance=eleve)
     return render(request, 'students/edit_eleve.html', {'form': form, 'eleve': eleve})
 
-def update_eleve(request, id):
-    eleve = get_object_or_404(Eleve, id=id)
-    if request.method == "POST":
-        form = EleveForm(request.POST, request.FILES, instance=eleve)
-        if form.is_valid():
-            form.save()
-            return redirect('show_eleves')
-    else:
-        form = EleveForm(instance=eleve)
-    return render(request, 'students/edit_eleve.html', {'form': form})
-
 def destroy_eleve(request, id):
     eleve = Eleve.objects.get(id=id)
+    classe_id = eleve.classe.id 
     eleve.delete()
-    return redirect("show_eleves")
+    return redirect('show_eleves_by_class', classe_id = classe_id)
 
 def detail_eleve(request, id):
     eleve = get_object_or_404(Eleve, id=id)
@@ -129,8 +121,10 @@ def ajouter_abscence(request, id):
         if form.is_valid():
             abscence = form.save(commit=False)
             abscence.eleve = eleve
+            classe_id = eleve.classe.id
+
             abscence.save()
-            return redirect('')
+            return redirect('detail_abscence', id = eleve.id)
     else:
         form = AbscenceEleveForm()
 
@@ -298,6 +292,7 @@ def delete_controle(request, id):
 def add_notes_for_all_students(request, controle_id):
     controle = get_object_or_404(Controle, id=controle_id)
     students = Eleve.objects.filter(classe=controle.matiere.classe)
+    controle_id = controle.matiere.classe.id  # Correction ici
 
     # Create the formset with the updated form
     NoteFormSet = modelformset_factory(Note, form=NoteForm, extra=len(students))
@@ -309,7 +304,7 @@ def add_notes_for_all_students(request, controle_id):
                 note = form.save(commit=False)
                 note.controle = controle
                 note.save()
-            return redirect('/')  # Change 'success_view' to the name of your success view
+            return redirect('students_notes', controle_id = controle_id)  # Change 'success_view' to the name of your success view
     else:
         initial_data = [{'eleve': student} for student in students]
         formset = NoteFormSet(queryset=Note.objects.none(), initial=initial_data)
@@ -369,3 +364,222 @@ def show_notes_by_classe(request, classe_id):
     }
 
     return render(request, 'note/show_note_by_classe.html', context)
+
+# ******gestion professeur******
+# Ajouter un professeur
+def add_professeur(request, classe_id):
+    classe = Classe.objects.get(id=classe_id)
+    if request.method == 'POST':
+        form = ProfesseurForm(request.POST, request.FILES)
+        if form.is_valid():
+            professeur = form.save(commit=False)
+            professeur.classe = classe
+            professeur.save()
+            return redirect('show_professeur_by_classe', classe_id=classe_id)
+    else:
+        form = ProfesseurForm()
+    return render(request, 'teachers/add_teacher.html', {'form': form, 'classe': classe})
+#Afficher la liste des professeur par classe
+def show_list_professeur_by_classe(request):
+    classes = Classe.objects.all()
+    return render(request, 'show_list_professeur_by_classe.html', {'classes': classes})
+
+def show_professeur(request):
+    professeur = Professeur.objects.all()
+    return render(request, 'teachers/show_teacher.html', {'professeur': professeur})
+
+# Afficher les professeurs par classe
+def show_professeur_by_classe(request, classe_id):
+    classe = get_object_or_404(Classe, id=classe_id)
+    professeurs = Professeur.objects.filter(classe=classe)
+    return render(request, 'teachers/show_teacher.html', {'professeurs': professeurs, 'classe': classe})
+
+# Éditer un professeur
+def edit_professeur(request, id):
+    professeur = Professeur.objects.get(id=id)
+    classe_id = professeur.classe.id  # Extrait l'ID de la classe du professeur
+    if request.method == 'POST':
+        form = ProfesseurForm(request.POST, request.FILES, instance=professeur)
+        if form.is_valid():
+            form.save()
+            return redirect('show_professeur_by_classe', classe_id=classe_id)
+    else:
+        form = ProfesseurForm(instance=professeur)
+    return render(request, 'teachers/edit_teacher.html', {'form': form, 'professeur': professeur})
+
+# Supprimer un professeur
+def delete_professeur(request, id):
+    professeur = get_object_or_404(Professeur, id=id)
+    classe_id = professeur.classe.id  # Extrait l'ID de la classe du professeur
+    professeur.delete()
+    return redirect('show_professeur_by_classe', classe_id=classe_id)
+#detail professeur
+def detail_professeur(request, id):
+    professeur = get_object_or_404(Professeur, id=id)
+    return render(request, 'teachers/detail_teacher.html', {'professeur': professeur})
+
+#*********Abscence*********
+
+def abscences_prof_par_classe(request, classe_id):
+    classe = get_object_or_404(Classe, id=classe_id)
+    professeurs = Professeur.objects.filter(classe=classe)
+    professeurs_with_absences = []
+
+    for professeur in professeurs:
+        nb_abscences = AbscenceProfesseur.objects.filter(professeur=professeur).count()
+        professeurs_with_absences.append({
+            'id': professeur.id,
+            'nom': professeur.nom,
+            'prenom': professeur.prenom,
+            'classe': professeur.classe.nom,
+            'nb_absences': nb_abscences
+        })
+
+    context = {
+        'classe': classe,
+        'professeurs': professeurs_with_absences
+    }
+    return render(request, 'teachers/abscence/show.html', context)
+
+def ajouter_abscence_prof(request, id):
+    professeur = get_object_or_404(Professeur, id=id)
+    if request.method == 'POST':
+        form = AbscenceProfesseurForm(request.POST)
+        if form.is_valid():
+            abscence = form.save(commit=False)
+            abscence.professeur = professeur
+            abscence.save()
+            return redirect('detail_abscence_prof', id = professeur.id)
+    else:
+        form = AbscenceProfesseurForm()
+
+    context = {
+        'form': form,
+        'professeur': professeur,
+    }
+    return render(request, 'teachers/abscence/ajouter_abscence.html', context)
+
+def detail_abscence_prof(request, id):
+    professeur = get_object_or_404(Professeur, id=id)
+    abscences = AbscenceProfesseur.objects.filter(professeur=professeur)
+    context = {
+        'professeur': professeur,
+        'abscences': abscences
+    }
+    return render(request, 'teachers/abscence/detail.html', context)
+
+def edit_abscence_prof(request, id):
+    abscence = get_object_or_404(AbscenceProfesseur, id=id)
+    if request.method == 'POST':
+        form = AbscenceProfesseurForm(request.POST, instance=abscence)
+        if form.is_valid():
+            form.save()
+            return redirect('/')
+    else:
+        form = AbscenceProfesseurForm(instance=abscence)
+    
+    context = {
+        'form': form,
+        'abscence': abscence,
+    }
+    return render(request, 'teachers/abscence/edit.html', context)
+
+def delete_abscence_prof(request, id):
+    abscence = get_object_or_404(AbscenceProfesseur, id=id)
+    abscence_prof_id = abscence.professeur.id  # Utilisez l'attribut 'professeur' de l'absence
+    abscence.delete()
+    return redirect('detail_abscence_prof', id = abscence_prof_id)
+
+def show_abscence_prof_by_classe(request):
+    classes = Classe.objects.all()
+    context = {
+        'classes': classes,
+        }
+    return render(request, 'show_abscence_prof_by_classe.html',context)
+
+#*******emploi du temp********
+def show_emplois_du_temps(request, classe_id):
+    classe = get_object_or_404(Classe, id=classe_id)
+    emplois_du_temps = EmploiDuTemps.objects.filter(classe=classe)
+    return render(request, 'calendrier/emploi_du_temps/emploi_du_temps.html', {'classe': classe, 'emplois_du_temps': emplois_du_temps})
+
+def show_emplois_du_temps_by_classe(request):
+    classes = Classe.objects.all()
+    context = {
+        'classes': classes,
+        }
+    return render(request, 'show_emploi_du_temps_by_classe.html',context)
+
+def add_emploi_du_temps(request, classe_id):
+    classe = get_object_or_404(Classe, id=classe_id)
+    if request.method == 'POST':
+        form = EmploiDuTempsForm(request.POST, request.FILES)
+        if form.is_valid():
+            emploi_du_temps = form.save(commit=False)
+            emploi_du_temps.classe = classe
+            emploi_du_temps.save()
+            return redirect('show_emplois_du_temps', classe_id=classe.id)
+    else:
+        form = EmploiDuTempsForm()
+    return render(request, 'calendrier/emploi_du_temps/add_emploi_du_temps.html', {'form': form, 'classe': classe})
+
+def delete_emploi_du_temps(request, emploi_id):
+    emploi_du_temps = get_object_or_404(EmploiDuTemps, id=emploi_id)
+    classe_id = emploi_du_temps.classe.id
+    emploi_du_temps.delete()
+    return redirect('show_emplois_du_temps', classe_id=classe_id)
+
+def edit_emploi_du_temps(request, emploi_id):
+    emploi_du_temps = get_object_or_404(EmploiDuTemps, id=emploi_id)
+    if request.method == 'POST':
+        form = EmploiDuTempsForm(request.POST, request.FILES, instance=emploi_du_temps)
+        if form.is_valid():
+            form.save()
+            return redirect('show_emplois_du_temps', classe_id=emploi_du_temps.classe.id)
+    else:
+        form = EmploiDuTempsForm(instance=emploi_du_temps)
+    return render(request, 'calendrier/emploi_du_temps/edit_emploi_du_temps.html', {'form': form, 'emploi_du_temps': emploi_du_temps})
+
+#*********composition********
+
+def show_composition(request, classe_id):
+    classe = get_object_or_404(Classe, id=classe_id)
+    composition = Composition.objects.filter(classe=classe)
+    return render(request, 'calendrier/composition/composition.html', {'classe': classe, 'composition': composition})
+
+def show_composition_by_classe(request):
+    classes = Classe.objects.all()
+    context = {
+        'classes': classes,
+        }
+    return render(request, 'show_composition_by_classe.html',context)
+
+def add_composition(request, classe_id):
+    classe = get_object_or_404(Classe, id=classe_id)
+    if request.method == 'POST':
+        form = CompositionForm(request.POST, request.FILES)
+        if form.is_valid():
+            composition = form.save(commit=False)
+            composition.classe = classe
+            composition.save()
+            return redirect('show_composition', classe_id=classe.id)
+    else:
+        form = EmploiDuTempsForm()
+    return render(request, 'calendrier/composition/add_composition.html', {'form': form, 'classe': classe})
+
+def delete_composition(request, composition_id):
+    composition = get_object_or_404(Composition, id=composition_id)
+    classe_id = composition.classe.id
+    composition.delete()
+    return redirect('show_composition', classe_id=classe_id)
+
+def edit_composition(request, composition_id):
+    composition = get_object_or_404(Composition, id=composition_id)
+    if request.method == 'POST':
+        form = CompositionForm(request.POST, request.FILES, instance=composition)
+        if form.is_valid():
+            form.save()
+            return redirect('show_composition', classe_id=composition.classe.id)
+    else:
+        form = CompositionForm(instance=composition)
+    return render(request, 'calendrier/composition/edit_composition.html', {'form': form, 'composition': composition})

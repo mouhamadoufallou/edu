@@ -1,5 +1,5 @@
 from django import forms
-from .models import Eleve, AbscenceEleve, Classe, Matiere, Controle, Note
+from .models import *
 from django.forms import modelformset_factory
 
 class EleveForm(forms.ModelForm):
@@ -77,3 +77,49 @@ class NoteForm(forms.ModelForm):
         # Customizing the label of the select field to show the student's name
         self.fields['eleve'].queryset = Eleve.objects.all()
         self.fields['eleve'].label_from_instance = lambda obj: f"{obj.nom} {obj.prenom}"
+        
+class ProfesseurForm(forms.ModelForm):
+    class Meta:
+        model = Professeur
+        fields = ['nom', 'prenom', 'date_naissance', 'lieu_naissance', 'tel', 'photo_profil', 'sexe']
+        widgets = {
+            'nom': forms.TextInput(attrs={'class': 'form-control'}),
+            'prenom': forms.TextInput(attrs={'class': 'form-control'}),
+            'date_naissance': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'lieu_naissance': forms.TextInput(attrs={'class': 'form-control'}),
+            'sexe': forms.Select(attrs={'class': 'form-control'}),
+            'tel': forms.TextInput(attrs={'class': 'form-control'}),
+            'photo_profil': forms.FileInput(attrs={'class': 'form-control-file'}),
+        }
+class AbscenceProfesseurForm(forms.ModelForm):
+    class Meta:
+        model = AbscenceProfesseur
+        fields = ['date', 'type']
+        widgets = {
+            'date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'type': forms.Select(attrs={'class': 'form-control'}),
+        }
+class EmploiDuTempsForm(forms.ModelForm):
+    class Meta:
+        model = EmploiDuTemps
+        fields = ['img', 'date_debut', 'date_fin']
+        widgets = {
+            'img': forms.FileInput(attrs={'class': 'form-control-file'}),
+            'date_debut': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'date_fin': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+
+        }
+class CompositionForm(forms.ModelForm):
+    class Meta:
+        model = Composition
+        fields = ['img', 'date_debut', 'date_fin']
+        widgets = {
+            'img': forms.FileInput(attrs={'class': 'form-control-file'}),
+            'date_debut': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'date_fin': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+
+        }
+class AnneScolaireForm(forms.ModelForm):
+    class Meta:
+        model = AnneScolaire
+        fields = ['annee', 'date_debut', 'date_fin', 'actif']

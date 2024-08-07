@@ -1,58 +1,66 @@
 {% extends "base/base.html" %}
 
-{% block title %}Update Professeur Record{% endblock title %}
+{% block title %}Edit Professeur Records{% endblock title %}
 
 {% block content %}
+
 <div class="col-md-12">
-    <form method="POST" class="post-form" action="{% url 'update_teacher' professeur.id %}" enctype="multipart/form-data">  
-        {% csrf_token %}  
-        <div class="container">   
-            <div class="col-12">  
-                <h3>Update Details</h3>  
-            </div> 
-            <div class="mb-3"> 
-                <label for="id_id">Professeur ID:</label>  
-                <input type="text" class="form-control" name="id" id="id_id" required maxlength="20" value="{{ professeur.id }}" readonly/>    
-            </div> 
-            <div class="mb-3"> 
-                <label for="id_nom">Nom:</label>  
-                <input type="text" class="form-control" name="nom" id="id_nom" required maxlength="100" value="{{ professeur.nom }}" />  
-            </div> 
-            <div class="mb-3"> 
-                <label for="id_prenom">Prénom:</label>  
-                <input type="text" class="form-control" name="prenom" id="id_prenom" required maxlength="100" value="{{ professeur.prenom }}" />  
-            </div> 
-            <div class="mb-3"> 
-                <label for="id_cin_professeur">CIN:</label>  
-                <input type="text" class="form-control" name="cin_professeur" id="id_cin_professeur" required maxlength="20" value="{{ professeur.cin_professeur }}" />  
-            </div> 
+    <form method="POST" class="post-form" action="{% url 'edit_professeur' professeur.id %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="container">
+            <div class="col-12">
+                <h3>Edit Professeur Details</h3>
+            </div>
+
+            <div class="mb-3">
+                <label for="id_nom">Nom:</label>
+                {{ form.nom }}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_prenom">Prénom:</label>
+                {{ form.prenom }}
+            </div>
+
             <div class="mb-3">
                 <label for="id_sexe">Sexe:</label>
-                <input type="text" class="form-control" name="sexe" id="id_sexe" required maxlength="10" value="{{ professeur.sexe }}" />
-            </div> 
-            <div class="mb-3"> 
-                <label for="id_date_naissance">Date de Naissance:</label>  
-                <input type="date" class="form-control" name="date_naissance" id="id_date_naissance" required value="{{ professeur.date_naissance }}" />  
-            </div> 
-            <div class="mb-3"> 
-                <label for="id_lieu_naissance">Lieu de Naissance:</label>  
-                <input type="text" class="form-control" name="lieu_naissance" id="id_lieu_naissance" required maxlength="100" value="{{ professeur.lieu_naissance }}" />  
-            </div> 
-            <div class="mb-3"> 
-                <label for="id_photo_profil">Photo de Profil:</label>  
-                <input type="file" class="form-control-file" name="photo_profil" id="id_photo_profil" accept="image/*"/>  
+                {{ form.sexe }}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_date_naissance">Date de Naissance:</label>
+                {{ form.date_naissance }}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_lieu_naissance">Lieu de Naissance:</label>
+                {{ form.lieu_naissance }}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_email">Email:</label>
+                {{ form.email }}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_photo_profil">Photo de Profil:</label>
                 {% if professeur.photo_profil %}
-                <img src="{{ professeur.photo_profil.url }}" class="mt-2" style="max-width: 200px;">
+                    <div>
+                        <img src="{{ professeur.photo_profil.url }}" alt="Photo de Profil" width="100" height="100">
+                    </div>
                 {% endif %}
-            </div> 
-            <div class="mb-3"> 
-                <label for="id_niveau_enseignement">Niveau d'Enseignement:</label>  
-                <input type="text" class="form-control" name="niveau_enseignement" id="id_niveau_enseignement" required maxlength="100" value="{{ professeur.niveau_enseignement }}" />  
-            </div> 
-            <div class="mb-3"> 
-                <button type="submit" class="btn btn-success btn-lg">Update</button>  
-            </div> 
-        </div>  
-    </form>  
+                {{ form.photo_profil }}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_tel">Téléphone:</label>
+                {{ form.tel }}
+            </div>
+
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </form>
 </div>
 {% endblock content %}

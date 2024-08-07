@@ -1,0 +1,33 @@
+{% extends "base/base.html" %}
+
+{% block title %}Modifier l'Emploi du Temps{% endblock title %}
+
+{% block content %}
+<div class="container mt-4">
+    <h3>Modifier l'Emploi du Temps</h3>
+    <form method="POST" class="post-form" action="{% url 'edit_emploi_du_temps' emploi_du_temps.id %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="id_date_debut">Date de Début:</label>
+            <input type="date" class="form-control" name="date_debut" id="id_date_debut" required value="{{ emploi_du_temps.date_debut|date:'Y-m-d' }}" />
+        </div>
+
+        <div class="mb-3">
+            <label for="id_date_fin">Date de Fin:</label>
+            <input type="date" class="form-control" name="date_fin" id="id_date_fin" required value="{{ emploi_du_temps.date_fin|date:'Y-m-d' }}" />
+        </div>
+
+        <div class="mb-3">
+            <label for="id_img">Image:</label>
+            <input type="file" class="form-control-file" name="img" id="id_img" accept="image/*">
+            {% if emploi_du_temps.img %}
+            <img src="{{ emploi_du_temps.img.url }}" class="mt-2" style="max-width: 200px;">
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <button type="submit" class="btn btn-success btn-lg">Enregistrer les Modifications</button>
+        </div>
+    </form>
+</div>
+{% endblock content %}

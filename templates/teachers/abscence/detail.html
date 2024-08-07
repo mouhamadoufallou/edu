@@ -1,0 +1,76 @@
+{% extends "base/base.html" %}
+
+{% block title %}Détails de l'Absence de l'Élève{% endblock title %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-body">
+            <h3 class="text-center mb-4">Détails de l'Absence professeur</h3>
+
+            <!-- Informations sur l'élève -->
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <!-- Section pour les informations de l'élève -->
+                    <tr>
+                        <td colspan="2" class="text-center">
+                            {% if professeur.photo_profil %}
+                                <img src="{{ professeur.photo_profil.url }}" class="mt-2 img-fluid rounded" style="max-width: 200px;">
+                            {% else %}
+                                <p>Pas de photo</p>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">ID</th>
+                        <td>{{ professeur.id }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Nom</th>
+                        <td>{{ professeur.nom }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Prénom</th>
+                        <td>{{ professeur.prenom }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Classe</th>
+                        <td>{{ professeur.classe }}</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- Informations sur les absences -->
+            <div class="table-responsive mt-4">
+                <h4 class="text-center">Absences</h4>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for abscence in abscences %}
+                            <tr>
+                                <td>{{ abscence.date }}</td>
+                                <td>{{ abscence.type }}</td>
+                                <td>
+                                    <a href="{% url 'edit_abscence_prof' abscence.id %}" class="btn btn-warning btn-sm mx-1">Modifier</a>
+                                    <a href="{% url 'delete_abscence_prof' abscence.id %}"  class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet élève ?');">Supprimer</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Bouton Retour -->
+            <div class="text-center mt-4">
+                <a href="{% url 'home' %}" class="btn btn-secondary">Retour</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
