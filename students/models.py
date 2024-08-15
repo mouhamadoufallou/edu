@@ -167,43 +167,49 @@ class Professeur(models.Model):
     lieu_naissance = models.CharField(max_length=100)
     tel = models.CharField(max_length=15)
     photo_profil = models.ImageField(upload_to='photos')
-    classe = models.ForeignKey(Classe, on_delete=models.CASCADE, related_name='professeurs')
+    classe = models.ForeignKey('Classe', on_delete=models.CASCADE, related_name='professeurs')
+
+    # Champs pour stocker les informations de l'utilisateur associé
+    user_username = models.CharField(max_length=150, blank=True, null=True)
+    user_email = models.EmailField(blank=True, null=True)
+    user_password = models.CharField(max_length=150, blank=True, null=True)
 
     def __str__(self):
         return f"{self.prenom} {self.nom}"
     
     def save(self, *args, **kwargs):
-        created = not self.pk  # Check if the instance is being created (not updated)
-        super(Professeur, self).save(*args, **kwargs)
+        if not self.pk:  # Vérifie si l'objet est nouvellement créé
+            base_username = f"{self.nom.lower()}"
+            username = base_username
+            email = f"{username}@example.com"
+            password = get_random_string(8)
 
-        base_username = f"{self.prenom.lower()}{self.nom.lower()}"
-        username = base_username
-        email = f"{username}@example.com"
-        password = generate_random_password()
-
-        user_exists = CustomUser.objects.filter(username=username).exists()
-        suffix = 1
-
-        while user_exists:
-            username = f"{base_username}{suffix}"
+            # Vérifier que le nom d'utilisateur est unique
             user_exists = CustomUser.objects.filter(username=username).exists()
-            suffix += 1
+            suffix = 1
+            while user_exists:
+                username = f"{base_username}{suffix}"
+                user_exists = CustomUser.objects.filter(username=username).exists()
+                suffix += 1
 
-        try:
-            user = CustomUser.objects.get(username=username)
-            user.email = email
-            user.set_password(password)
-        except CustomUser.DoesNotExist:
+            # Créer l'utilisateur
             user = CustomUser.objects.create_user(
                 username=username,
                 email=email,
                 password=password
             )
             user.is_teacher = True
+            user.save()
 
-        user.save()
+            # Mettre à jour les informations de l'utilisateur dans Professeur
+            self.user_username = username
+            self.user_email = email
+            self.user_password = password
 
-        if created:
+        super(Professeur, self).save(*args, **kwargs)
+
+        # Créer une absence par défaut si le professeur est nouvellement créé
+        if not self.pk:
             AbscenceProfesseur.objects.create(professeur=self, type='non-justifiée')
 
     

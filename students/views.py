@@ -910,7 +910,7 @@ def show_professeur_matieres(request):
     else:
         matieres = []
 
-    return render(request, 'professeur_matieres.html', {'matieres': matieres, 'classe': classe})
+    return render(request, 'teachers/professeur_matieres.html', {'matieres': matieres, 'classe': classe})
 
 @login_required
 def show_professeur_info(request):
@@ -918,4 +918,4 @@ def show_professeur_info(request):
     professeur = request.user
     
     # Passe les informations du professeur au template
-    return render(request, 'professeur_info.html', {'professeur': professeur})
+    return render(request, 'teachers/professeur_info.html', {'professeur': professeur})

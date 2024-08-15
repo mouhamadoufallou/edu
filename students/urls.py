@@ -5,7 +5,9 @@ from students import views
 urlpatterns = [
     #page professeur
     path('professeur/mes_eleves/', views.list_eleves_professeur, name='list_eleves_professeur'),
-    
+    path('mes-matieres/', views.show_professeur_matieres, name='show_professeur_matieres'),
+    path('mes-informations/', views.show_professeur_info, name='show_professeur_info'),
+
     #page de l'eleve
     path('mes-notes/', views.mes_notes, name='mes_notes'),
     path('mes-informations/', views.mes_informations, name='mes_informations'),
