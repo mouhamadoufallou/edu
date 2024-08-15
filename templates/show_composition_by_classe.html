@@ -1,13 +1,24 @@
 {% extends "base/base.html" %}
-  
+
 {% block title %}Liste des Classes{% endblock title %}
-  
+
 {% block content %}
 <div class="container mt-4">
-    <!-- Bouton pour ajouter une nouvelle classe -->
-    <div class="mb-3">
-        <a href="{% url 'add_classe' %}" class="btn btn-primary">Ajouter une nouvelle classe</a>
-    </div>
+    <!-- Formulaire de sélection d'année scolaire -->
+    <form method="GET" class="mb-4">
+        <div class="form-group">
+            <label for="annee_scolaire">Sélectionner une année scolaire:</label>
+            <select id="annee_scolaire" name="annee_scolaire" class="form-control">
+                <option value="">-- Choisir une année --</option>
+                {% for annee in annees %}
+                <option value="{{ annee.id }}" {% if selected_annee_id == annee.id %}selected{% endif %}>
+                    {{ annee.annee }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary mt-2">Filtrer</button>
+    </form>
 
     <h2 class="mb-4">Liste des Classes</h2>
     
@@ -32,7 +43,7 @@
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="3">Aucune classe disponible.</td>
+                    <td colspan="3" class="text-center">Aucune classe disponible.</td>
                 </tr>
                 {% endfor %}
             </tbody>

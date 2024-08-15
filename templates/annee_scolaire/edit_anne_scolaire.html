@@ -1,0 +1,33 @@
+{% extends "base/base.html" %}
+
+{% block title %}Modifier une Année Scolaire{% endblock title %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Modifier une Année Scolaire</h2>
+    <form method="POST" class="post-form" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="id_annee">Année:</label>
+            {{ form.annee }}
+        </div>
+
+        <div class="mb-3">
+            <label for="id_debut">Date de Début:</label>
+            {{ form.date_debut }}
+        </div>
+
+        <div class="mb-3">
+            <label for="id_fin">Date de Fin:</label>
+            {{ form.date_fin }}
+        </div>
+        <div class="mb-3">
+            <label for="id_fin">Actif:</label>
+            {{ form.actif }}
+        </div>
+        <div class="mb-3">
+            <button type="submit" class="btn btn-primary">Enregistrer les Modifications</button>
+        </div>
+    </form>
+</div>
+{% endblock content %}

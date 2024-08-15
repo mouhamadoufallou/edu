@@ -36,13 +36,18 @@ class AbscenceEleveForm(forms.ModelForm):
             'type': forms.Select(attrs={'class': 'form-control'}),
         }
 class ClasseForm(forms.ModelForm):
+    annee_scolaire = forms.ModelChoiceField(
+        queryset=AnneScolaire.objects.all(), 
+        required=True,
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+
     class Meta:
         model = Classe
-        fields = ['nom']
+        fields = ['nom', 'annee_scolaire']  # Incluez 'annee_scolaire' ici
         widgets = {
             'nom': forms.TextInput(attrs={'class': 'form-control'}),
         }
-        
 class ControleForm(forms.ModelForm):
     class Meta:
         model = Controle
@@ -123,3 +128,9 @@ class AnneScolaireForm(forms.ModelForm):
     class Meta:
         model = AnneScolaire
         fields = ['annee', 'date_debut', 'date_fin', 'actif']
+        widgets = {
+            'annee': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'date_debut': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'date_fin': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'actif': forms.CheckboxInput(attrs={'class': 'form-control-file'}),
+        }

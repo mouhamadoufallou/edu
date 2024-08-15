@@ -8,34 +8,23 @@
             <li class="nav-item nav-dropdown">
                 <a class="nav-link nav-dropdown-toggle" href="#">
                     <i class="nav-icon icon-user"></i> Elève</a>
+                    <ul class="nav-dropdown-items">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'show_professeur_info' %}">
+                                <i class="nav-icon icon-puzzle"></i>Voir mes informations personnelles</a>
+                        </li>                    
+                    </ul>
                 <ul class="nav-dropdown-items">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'show_eleves' %}">
+                        <a class="nav-link" href="{% url 'list_eleves_professeur' %}">
                             <i class="nav-icon icon-puzzle"></i> Liste des Élève</a>
                     </li>                    
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <i class="nav-icon icon-puzzle"></i>Liste des Classes</a>
-                    </li>
                 </ul>
-            </li>
-            <li class="nav-item nav-dropdown">
-                <a class="nav-link nav-dropdown-toggle" href="#">
-                    <i class="nav-icon icon-user"></i> Professeur</a>
                 <ul class="nav-dropdown-items">
                     <li class="nav-item">
-                        <a class="nav-link" href="{%url 'show_teacher'%}">
-                            <i class="nav-icon icon-puzzle"></i>Listes des professeur</a>
-                    </li>
-                </ul>
-            </li>
-            <li class="nav-item nav-dropdown">
-                <a class="nav-link nav-dropdown-toggle" href="#">
-                    <i class="nav-icon icon-user"></i>Absence</a>
-                <ul class="nav-dropdown-items">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <i class="nav-icon icon-puzzle"></i> Liste des absences</a>
+                        <a class="nav-link" href="{% url 'show_professeur_matieres' %}">
+                            <i class="nav-icon icon-puzzle"></i> Matieres</a>
+                    </li>                    
                 </ul>
             </li>
             <li class="nav-item nav-dropdown">
@@ -43,12 +32,12 @@
                     <i class="nav-icon icon-user"></i>Calendrier</a>
                 <ul class="nav-dropdown-items">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="{%url 'compositions_eleve'%}">
                             <i class="nav-icon icon-puzzle"></i> Composition</a>
                     </li>                    
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <i class="nav-icon icon-puzzle"></i> Evènement Scolaire</a>
+                        <a class="nav-link" href="{%url 'emploi_du_temps_eleve'%}">
+                            <i class="nav-icon icon-puzzle"></i> Emploi du temps</a>
                     </li>
                 </ul>
             </li>

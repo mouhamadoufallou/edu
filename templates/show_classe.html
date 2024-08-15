@@ -8,7 +8,18 @@
     <span>
         <a href="{% url 'add_classe' %}" class="btn btn-primary mb-3">Ajouter une nouvelle classe</a>
     </span>  
-    
+
+    <!-- Sélection de l'année scolaire -->
+    <div class="form-group">
+        <label for="annee_scolaire">Sélectionnez une année scolaire :</label>
+        <select id="annee_scolaire" class="form-control" onchange="filterClasses()">
+            <option value="">-- Sélectionner une année --</option>
+            {% for annee in annees %}
+                <option value="{{ annee.id }}" {% if selected_annee and selected_annee.id == annee.id %}selected{% endif %}>{{ annee.annee }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
     <h2 class="mb-4">Liste des Classes</h2>
     
     <!-- Tableau des classes -->
@@ -20,7 +31,7 @@
                     <th colspan="2">Actions</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="classe_list">
                 {% for classe in classes %}
                 <tr>
                     <td>{{ classe.nom }}</td>
@@ -33,11 +44,19 @@
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="3">Aucune classe disponible.</td>
+                    <td colspan="3">Aucune classe disponible pour cette année scolaire.</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
 </div>
+
+<script>
+    function filterClasses() {
+        var anneeId = document.getElementById('annee_scolaire').value;
+        var url = "{% url 'show_classe' %}?annee_scolaire=" + anneeId;
+        window.location.href = url;
+    }
+</script>
 {% endblock content %}

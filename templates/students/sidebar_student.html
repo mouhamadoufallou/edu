@@ -3,46 +3,40 @@
     <nav class="sidebar-nav">
         <ul class="nav">
             <li class="nav-item">
-                <a class="nav-link" href="#"><i class="icon-speedometer"></i> Dashboard</a>
+                <a class="nav-link" href="{% url 'student_dashboard' %}"><i class="icon-speedometer"></i> Dashboard</a>
             </li>
             <li class="nav-item nav-dropdown">
                 <a class="nav-link nav-dropdown-toggle" href="#">
-                    <i class="nav-icon icon-user"></i> Elève</a>
+                    <i class="nav-icon icon-user"></i>Eléve</a>
                 <ul class="nav-dropdown-items">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'show_eleves' %}">
-                            <i class="nav-icon icon-puzzle"></i> Liste des Élève</a>
-                    </li>                    
+                        <a class="nav-link" href="{% url 'mes_informations' %}">
+                            <i class="nav-icon icon-puzzle"></i> Mes informations</a>
+                    </li><li class="nav-item">
+                        <a class="nav-link" href="{% url 'mes_notes' %}">
+                            <i class="nav-icon icon-puzzle"></i> Mes Notes</a>
+                    </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <i class="nav-icon icon-puzzle"></i>Liste des Classes</a>
+                        <a class="nav-link" href="{% url 'mes_abscences' %}">
+                            <i class="nav-icon icon-puzzle"></i> Mes Absences</a>
                     </li>
                 </ul>
             </li>
             <li class="nav-item nav-dropdown">
                 <a class="nav-link nav-dropdown-toggle" href="#">
-                    <i class="nav-icon icon-user"></i>Absence</a>
+                    <i class="nav-icon icon-calendar"></i>Calendrier</a>
                 <ul class="nav-dropdown-items">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <i class="nav-icon icon-puzzle"></i> Liste des absences</a>
-                    </li>                    
-                </ul>
-            </li>
-            <li class="nav-item nav-dropdown">
-                <a class="nav-link nav-dropdown-toggle" href="#">
-                    <i class="nav-icon icon-user"></i>Calendrier</a>
-                <ul class="nav-dropdown-items">
+                        <a class="nav-link" href="{% url 'emploi_du_temps_eleve' %}">
+                            <i class="nav-icon icon-puzzle"></i>Voir mon emploi du temps</a>
+                    </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <i class="nav-icon icon-puzzle"></i> Composition</a>
-                    </li>                    
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <i class="nav-icon icon-puzzle"></i> Evènement Scolaire</a>
+                        <a class="nav-link" href="{% url 'compositions_eleve' %}">
+                            <i class="nav-icon icon-puzzle"></i>Voir mes Composition</a>
                     </li>
                 </ul>
             </li>
+        </ul>
     </nav>
     <button class="sidebar-minimizer brand-minimizer" type="button"></button>
 
@@ -50,3 +44,28 @@
     {% endblock %}
 </div>
 
+<script>
+document.getElementById('class-selector').addEventListener('change', function() {
+    var selectedOption = this.options[this.selectedIndex];
+    var url = selectedOption.getAttribute('data-url');
+    if (url) {
+        window.location.href = url;
+    }
+});
+
+document.getElementById('absence-class-selector').addEventListener('change', function() {
+    var selectedOption = this.options[this.selectedIndex];
+    var url = selectedOption.getAttribute('data-url');
+    if (url) {
+        window.location.href = url;
+    }
+});
+
+document.getElementById('note-class-selector').addEventListener('change', function() {
+    var selectedOption = this.options[this.selectedIndex];
+    var url = selectedOption.getAttribute('data-url');
+    if (url) {
+        window.location.href = url;
+    }
+});
+</script>

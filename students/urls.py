@@ -3,6 +3,24 @@ from django.urls import path
 from students import views
 
 urlpatterns = [
+    #page professeur
+    path('professeur/mes_eleves/', views.list_eleves_professeur, name='list_eleves_professeur'),
+    
+    #page de l'eleve
+    path('mes-notes/', views.mes_notes, name='mes_notes'),
+    path('mes-informations/', views.mes_informations, name='mes_informations'),
+    # URL pour les absences de l'élève connecté
+    path('absences/', views.mes_abscences, name='mes_abscences'),    # URL pour l'emploi du temps de l'élève connecté
+    path('emploi-du-temps/', views.emploi_du_temps_eleve, name='emploi_du_temps_eleve'),
+    # URL pour les compositions de l'élève connecté
+    path('compositions/', views.compositions_eleve, name='compositions_eleve'),
+        
+    #Annee scolaire
+    path('add-anne-scolaire/', views.add_anne_scolaire, name='add_anne_scolaire'),
+    path('annee-scolaire/', views.show_annee_scolaire, name='show_annee_scolaire'),
+    path('edit-anne-scolaire/<int:pk>/', views.edit_anne_scolaire, name='edit_anne_scolaire'),
+    path('delete-anne-scolaire/<int:id>/', views.delete_annee, name='delete_annee'),
+    
     #Copositions
     path('classe/<int:classe_id>/composition/', views.show_composition, name='show_composition'),
     path('classe/<int:classe_id>/composition/ajouter/', views.add_composition, name='add_composition'),

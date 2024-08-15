@@ -8,8 +8,12 @@
     <form method="post">
         {% csrf_token %}
         <div class="form-group">
-            <label for="id_nom">Nom de la Classe:</label>
-            {{ form.nom }}
+            <label for="{{ form.nom.id_for_label }}">Nom de la Classe:</label>
+            {{ form.nom}}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.annee_scolaire.id_for_label }}">Année Scolaire:</label>
+            {{ form.annee_scolaire }}
         </div>
         <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
         <a href="{% url 'show_classe' %}" class="btn btn-secondary">Annuler</a>

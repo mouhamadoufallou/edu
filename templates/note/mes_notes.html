@@ -1,0 +1,38 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Mes Notes{% endblock title %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Mes Notes</h2>
+    
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Matière</th>
+                    <th>Note</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if notes %}
+                    {% for note in notes %}
+                        <tr>
+                            <td>{{ note.controle.matiere.nom }}</td>
+                            <td>{{ note.note }}</td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="2" class="text-center">Aucune note disponible.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mt-4">
+        <a href="#" class="btn btn-secondary">Retour</a>
+    </div>
+</div>
+{% endblock %}

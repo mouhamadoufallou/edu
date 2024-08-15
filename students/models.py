@@ -1,22 +1,40 @@
 from django.db import models
 from datetime import date
 from django.contrib.auth.models import User
-import random
-import string
+import random, string
+from django.conf import settings  # Import settings to use the custom user model
 from accounts.models import User as CustomUser
+from django.utils.crypto import get_random_string
+from django.contrib.auth import get_user_model
 
-def generate_random_password(length=8):
+
+
+def generate_random_password(length=3):
     characters = string.ascii_letters + string.digits
     return ''.join(random.choice(characters) for i in range(length))
+class AnneScolaire(models.Model):
+    annee = models.CharField(max_length=10, unique=True, help_text="Année scolaire au format '2023-2024'")
+    date_debut = models.DateField(help_text="Date de début de l'année scolaire")
+    date_fin = models.DateField(help_text="Date de fin de l'année scolaire")
+    actif = models.BooleanField(default=True, help_text="Indique si l'année scolaire est actuellement active")
 
+    def __str__(self):
+        return self.annee
+
+    class Meta:
+        verbose_name = "Année Scolaire"
+        verbose_name_plural = "Années Scolaires"
 class Classe(models.Model):
     nom = models.CharField(max_length=100)
+    annee_scolaire = models.ForeignKey(AnneScolaire, on_delete=models.CASCADE)
     class Meta:
         db_table = "tblclasses"
     def __str__(self):
         return self.nom
-
+    
+CustomUser = get_user_model()
 class Eleve(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='eleve')
     nom = models.CharField(max_length=100)
     prenom = models.CharField(max_length=100)
     cin_eleve = models.CharField(max_length=20, unique=True)
@@ -44,49 +62,42 @@ class Eleve(models.Model):
         db_table = "tblstudents"
 
     def save(self, *args, **kwargs):
-        created = not self.pk  # Check if the instance is being created (not updated)
-        super(Eleve, self).save(*args, **kwargs)
+        # Si l'utilisateur n'est pas encore associé, le créer
+        if not self.user_id:
+            base_username = f"{self.nom.lower()}"
+            username = base_username
+            email = f"{username}@example.com"
+            password = get_random_string(8)
 
-        # Génération du nom d'utilisateur, email, et mot de passe (logique inchangée)
-        base_username = f"{self.prenom.lower()}{self.nom.lower()}"
-        username = base_username
-        email = f"{username}@example.com"
-        password = generate_random_password()
-
-        user_exists = CustomUser.objects.filter(username=username).exists()
-        suffix = 1
-
-        # Boucle pour générer un nom d'utilisateur unique
-        while user_exists:
-            username = f"{base_username}{suffix}"
+            # Vérifier que le nom d'utilisateur est unique
             user_exists = CustomUser.objects.filter(username=username).exists()
-            suffix += 1
+            suffix = 1
+            while user_exists:
+                username = f"{base_username}{suffix}"
+                user_exists = CustomUser.objects.filter(username=username).exists()
+                suffix += 1
 
-        try:
-            user = CustomUser.objects.get(username=username)
-            # L'utilisateur existe, mettre à jour ses informations
-            user.email = email
-            user.set_password(password)
-        except CustomUser.DoesNotExist:
-            # L'utilisateur n'existe pas, créer un nouvel utilisateur
+            # Créer l'utilisateur
             user = CustomUser.objects.create_user(
                 username=username,
                 email=email,
                 password=password
             )
             user.is_student = True
+            user.save()
 
-        user.save()
+            # Associer l'utilisateur à l'élève
+            self.user = user
+            self.user_username = username
+            self.user_email = email
+            self.user_password = password
 
-        self.user_username = username
-        self.user_email = email
-        self.user_password = password
         super(Eleve, self).save(*args, **kwargs)
-        
-    # Créer une absence par défaut si l'élève est nouvellement créé
-        if created:
-            AbscenceEleve.objects.create(eleve=self, type='non-justifiée')
 
+        # Créer une absence par défaut si l'élève est nouvellement créé
+        if not self.pk:
+            AbscenceEleve.objects.create(eleve=self, type='non-justifiée')
+                        
 class AbscenceEleve(models.Model):
     eleve = models.ForeignKey(Eleve, on_delete=models.CASCADE, related_name='abscences')
     date = models.DateField(default='2000-02-02')
@@ -156,12 +167,7 @@ class Professeur(models.Model):
     lieu_naissance = models.CharField(max_length=100)
     tel = models.CharField(max_length=15)
     photo_profil = models.ImageField(upload_to='photos')
-    #email = models.EmailField(unique=True)
-    user_username = models.CharField(max_length=150, blank=True, null=True)
-    user_email = models.EmailField(blank=True, null=True)
-    user_password = models.CharField(max_length=150, blank=True, null=True)
     classe = models.ForeignKey(Classe, on_delete=models.CASCADE, related_name='professeurs')
-
 
     def __str__(self):
         return f"{self.prenom} {self.nom}"
@@ -170,7 +176,6 @@ class Professeur(models.Model):
         created = not self.pk  # Check if the instance is being created (not updated)
         super(Professeur, self).save(*args, **kwargs)
 
-        # Génération du nom d'utilisateur, email, et mot de passe (logique inchangée)
         base_username = f"{self.prenom.lower()}{self.nom.lower()}"
         username = base_username
         email = f"{username}@example.com"
@@ -179,7 +184,6 @@ class Professeur(models.Model):
         user_exists = CustomUser.objects.filter(username=username).exists()
         suffix = 1
 
-        # Boucle pour générer un nom d'utilisateur unique
         while user_exists:
             username = f"{base_username}{suffix}"
             user_exists = CustomUser.objects.filter(username=username).exists()
@@ -187,26 +191,18 @@ class Professeur(models.Model):
 
         try:
             user = CustomUser.objects.get(username=username)
-            # L'utilisateur existe, mettre à jour ses informations
             user.email = email
             user.set_password(password)
         except CustomUser.DoesNotExist:
-            # L'utilisateur n'existe pas, créer un nouvel utilisateur
             user = CustomUser.objects.create_user(
                 username=username,
                 email=email,
                 password=password
             )
-            user.is_student = True
+            user.is_teacher = True
 
         user.save()
 
-        self.user_username = username
-        self.user_email = email
-        self.user_password = password
-        super(Professeur, self).save(*args, **kwargs)
-        
-    # Créer une absence par défaut si l'élève est nouvellement créé
         if created:
             AbscenceProfesseur.objects.create(professeur=self, type='non-justifiée')
 
@@ -243,16 +239,3 @@ class Composition(models.Model):
 
     def __str__(self):
         return f"Composition de le classe de {self.classe.nom} du {self.date_debut} au {self.date_fin}"
-    
-class AnneScolaire(models.Model):
-    annee = models.CharField(max_length=10, unique=True, help_text="Année scolaire au format '2023-2024'")
-    date_debut = models.DateField(help_text="Date de début de l'année scolaire")
-    date_fin = models.DateField(help_text="Date de fin de l'année scolaire")
-    actif = models.BooleanField(default=True, help_text="Indique si l'année scolaire est actuellement active")
-
-    def __str__(self):
-        return self.annee
-
-    class Meta:
-        verbose_name = "Année Scolaire"
-        verbose_name_plural = "Années Scolaires"

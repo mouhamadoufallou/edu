@@ -38,7 +38,14 @@
 
 <div class="app-body">
     <!--Sidebar-->
+
+    {% if user.is_student %}
+    {% include 'students/sidebar_student.html' %}
+    {% elif user.is_admin %}
     {% include 'base/sidebar.html' %}
+    {% elif user.is_teacher %}
+    {% include 'teachers/sidebar_teacher.html' %}
+    {% endif %}
 
     <!-- Main content -->
     <main class="main">

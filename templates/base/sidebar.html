@@ -10,6 +10,10 @@
                     <i class="nav-icon icon-user"></i>Gestion de l'école</a>
                 <ul class="nav-dropdown-items">
                     <li class="nav-item">
+                        <a class="nav-link" href="{% url 'show_annee_scolaire' %}">
+                            <i class="nav-icon icon-puzzle"></i>Année scolaire</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="{% url 'show_classe' %}">
                             <i class="nav-icon icon-puzzle"></i>Classes</a>
                     </li>
@@ -67,20 +71,6 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#">
                             <i class="nav-icon icon-puzzle"></i> Évènement Scolaire</a>
-                    </li>
-                </ul>
-            </li>
-            <li class="nav-item nav-dropdown">
-                <a class="nav-link nav-dropdown-toggle" href="#">
-                    <i class="nav-icon icon-user"></i>Gestion utilisateurs</a>
-                <ul class="nav-dropdown-items">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <i class="nav-icon icon-puzzle"></i> Liste des utilisateurs</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'add_user' %}">
-                            <i class="nav-icon icon-puzzle"></i> Ajouter un nouvel utilisateur</a>
                     </li>
                 </ul>
             </li>

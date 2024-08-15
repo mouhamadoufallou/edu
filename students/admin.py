@@ -1,43 +1,56 @@
 from django.contrib import admin
-from .models import *
-"""
-# Register your models here.
+from .models import Eleve, AbscenceEleve, Professeur, AbscenceProfesseur, Classe, Matiere, Controle, Note, EmploiDuTemps, Composition
 
-class EleveAdmin(admin.ModelAdmin):
-    list_display = ('nom', 'prenom', 'classe', 'user_username', 'user_email', 'user_password')
-    readonly_fields = ('user_username', 'user_email', 'user_password')
-
-admin.site.register(Eleve, EleveAdmin)
-
-
-
-from django.contrib import admin
-from .models import Eleve, AbsenceEleve
-"""
-class AbsenceEleveInline(admin.TabularInline):
+# Inline pour les absences des élèves
+class AbscenceEleveInline(admin.TabularInline):
     model = AbscenceEleve
+    extra = 0
+
+# Inline pour les absences des professeurs
+class AbscenceProfesseurInline(admin.TabularInline):
+    model = AbscenceProfesseur
     extra = 0
 
 @admin.register(Eleve)
 class EleveAdmin(admin.ModelAdmin):
-    inlines = [AbsenceEleveInline]
-    # Ajoutez d'autres champs à afficher dans la liste des élèves
-    list_display = ('id','nom', 'prenom', 'cin_eleve', 'classe','user_username', 'user_email', 'user_password')
-    # Ajoutez d'autres champs à utiliser pour le filtre
+    inlines = [AbscenceEleveInline]
+    list_display = ('id', 'nom', 'prenom', 'cin_eleve', 'classe', 'user_username', 'user_email', 'user_password')
+    readonly_fields = ('user_username', 'user_email', 'user_password')
     list_filter = ('classe',)
-    # Ajoutez d'autres champs à utiliser pour la recherche
     search_fields = ('nom', 'prenom', 'cin_eleve')
-    
+
+@admin.register(Professeur)
+class ProfesseurAdmin(admin.ModelAdmin):
+    inlines = [AbscenceProfesseurInline]
+    list_display = ('nom', 'prenom', 'date_naissance', 'sexe', 'lieu_naissance', 'tel', 'classe')
+    search_fields = ('nom', 'prenom')
+
 @admin.register(Classe)
 class ClasseAdmin(admin.ModelAdmin):
-    list_display = ('nom',)
+    list_display = ('nom', 'annee_scolaire')
+    search_fields = ('nom', 'annee_scolaire__annee')  # Utilisez la relation pour rechercher l'année scolaire
+
+@admin.register(Matiere)
+class MatiereAdmin(admin.ModelAdmin):
+    list_display = ('nom', 'classe')
+    search_fields = ('nom', 'classe__nom')  # Utilisez la relation pour rechercher la classe
+
+@admin.register(Controle)
+class ControleAdmin(admin.ModelAdmin):
+    list_display = ('matiere', 'date', 'type', 'description')
+    search_fields = ('matiere__nom', 'type')
+
+@admin.register(Note)
+class NoteAdmin(admin.ModelAdmin):
+    list_display = ('eleve', 'controle', 'note')
+    search_fields = ('eleve__nom', 'controle__matiere__nom')
 
 @admin.register(EmploiDuTemps)
 class EmploiDuTempsAdmin(admin.ModelAdmin):
-    list_display = ('classe', 'date_debut', 'date_fin')
-    
-@admin.register(AnneScolaire)
-class AnneScolaireAdmin(admin.ModelAdmin):
-    list_display = ('annee', 'date_debut', 'date_fin', 'actif')
-    list_filter = ('actif',)
-    search_fields = ('annee',)
+    list_display = ('classe', 'date_debut', 'date_fin', 'img')
+    search_fields = ('classe__nom',)
+
+@admin.register(Composition)
+class CompositionAdmin(admin.ModelAdmin):
+    list_display = ('classe', 'date_debut', 'date_fin', 'img')
+    search_fields = ('classe__nom',)
