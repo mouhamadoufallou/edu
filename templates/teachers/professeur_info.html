@@ -1,37 +1,76 @@
 {% extends "base/base.html" %}
 
-{% block title %}Mes Informations Personnelles{% endblock title %}
+{% block title %}Mes Informations{% endblock title %}
 
 {% block content %}
 <div class="container mt-4">
-    <h2 class="mb-4">Mes Informations Personnelles</h2>
-    <div class="table-responsive">
-        <table class="table table-striped table-bordered">
-            <thead class="thead-dark">
-                <tr>
-                    <th>ID</th>
-                    <th>Nom</th>
-                    <th>Prénom</th>
-                    <th>Date de Naissance</th>
-                    <th>Lieu de Naissance</th>
-                    <th>Email</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>{{ professeur.id }}</td>
-                    <td>{{ professeur.nom }}</td>
-                    <td>{{ professeur.prenom }}</td>
-                    <td>{{ professeur.date_naissance }}</td>
-                    <td>{{ professeur.lieu_naissance }}</td>
-                    <td>{{ professeur.email }}</td>
-                    <td>
-                        <a href="{% url 'edit_professeur' professeur.id %}" class="btn btn-warning btn-sm">Éditer</a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+    <div class="card">
+        <div class="card-body">
+            <h3 class="text-center mb-4">Détails du Professeur</h3>
+            
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <!-- Section for Professor Information -->
+                    <tr>
+                        <td colspan="2" class="text-center">
+                            {% if professeur.photo_profil %}
+                                <img src="{{ professeur.photo_profil.url }}" class="mt-2 img-fluid rounded" style="max-width: 200px;">
+                            {% else %}
+                                <p>Pas de photo</p>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">ID</th>
+                        <td>{{ professeur.id }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Nom</th>
+                        <td>{{ professeur.nom }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Prénom</th>
+                        <td>{{ professeur.prenom }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Email</th>
+                        <td>{{ professeur.user_email }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Téléphone</th>
+                        <td>{{ professeur.tel }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Classe</th>
+                        <td>{{ classe.nom }}</td>
+                    </tr>
+                </table>
+            </div>
+
+            <h4 class="mt-4">Matières Assignées</h4>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Nom de la Matière</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for matiere in matieres %}
+                        <tr>
+                            <td>{{ matiere.nom }}</td>
+                            <td>{{ matiere.description }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="2" class="text-center">Aucune matière assignée à cette classe.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock content %}

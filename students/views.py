@@ -840,7 +840,7 @@ def emploi_du_temps_eleve(request):
 
     elif user.is_teacher:
         # L'utilisateur est un professeur
-        professeur = get_object_or_404(Professeur, user=user)
+        professeur = Professeur.objects.get(user_username=user.username)
         emplois_du_temps = EmploiDuTemps.objects.filter(classe=professeur.classe)
         return render(request, 'calendrier/emploi_du_temps/emploi_du_temps_eleve.html', {
             'emplois_du_temps': emplois_du_temps, 
@@ -865,7 +865,7 @@ def compositions_eleve(request):
 
     elif user.is_teacher:
         # L'utilisateur est un professeur
-        professeur = get_object_or_404(Professeur, user=user)
+        professeur = Professeur.objects.get(user_username=user.username)
         compositions = Composition.objects.filter(classe=professeur.classe)
         return render(request, 'calendrier/composition/students_compositions.html', {
             'compositions': compositions, 
@@ -881,41 +881,73 @@ def list_eleves_professeur(request):
     if not request.user.is_teacher:
         return redirect('dashboard')
 
-    # Récupérer les classes que ce professeur enseigne
-    classes = Classe.objects.filter(professeur=request.user)
+    # Récupérer le professeur associé à l'utilisateur connecté
+    try:
+        professeur = Professeur.objects.get(user_username=request.user.username)
+    except Professeur.DoesNotExist:
+        return redirect('dashboard')
 
-    # Filtrer les élèves en fonction de ces classes
-    eleves = Eleve.objects.filter(classe__in=classes)
+    # Récupérer la classe du professeur
+    classe = professeur.classe
+
+    # Filtrer les élèves en fonction de cette classe
+    eleves = Eleve.objects.filter(classe=classe)
 
     context = {
         'eleves': eleves,
     }
 
-    return render(request, 'liste_eleve_prof.html', context)
+    return render(request, 'teachers/liste_eleve_prof.html', context)
+
 
 @login_required
 def show_professeur_matieres(request):
-    # Récupère l'utilisateur connecté
-    professeur = request.user
+    # Assurez-vous que l'utilisateur est un professeur
+    if not request.user.is_teacher:
+        return redirect('dashboard')
 
-    # Récupère la classe du professeur
+    # Récupérer le professeur associé à l'utilisateur connecté
     try:
-        classe = Classe.objects.get(professeur=professeur)
-    except Classe.DoesNotExist:
-        classe = None
+        professeur = Professeur.objects.get(user_username=request.user.username)
+    except Professeur.DoesNotExist:
+        return redirect('dashboard')
+
+    # Récupérer la classe du professeur
+    classe = professeur.classe
 
     # Si le professeur est associé à une classe, récupère les matières de cette classe
     if classe:
         matieres = Matiere.objects.filter(classe=classe)
     else:
-        matieres = []
+        matieres = Matiere.objects.none()
 
-    return render(request, 'teachers/professeur_matieres.html', {'matieres': matieres, 'classe': classe})
+    context = {
+        'classe': classe,
+        'matieres': matieres,
+    }
+
+    return render(request, 'teachers/professeur_matieres.html', context)
+
+
 
 @login_required
 def show_professeur_info(request):
-    # Récupère le professeur connecté
-    professeur = request.user
+    # Récupérer le professeur connecté
+    professeur = get_object_or_404(Professeur, user_username=request.user.username)
     
-    # Passe les informations du professeur au template
-    return render(request, 'teachers/professeur_info.html', {'professeur': professeur})
+    # Récupérer la classe du professeur
+    classe = professeur.classe
+
+    # Récupérer les matières associées à la classe
+    if classe:
+        matieres = Matiere.objects.filter(classe=classe)
+    else:
+        matieres = Matiere.objects.none()
+
+    context = {
+        'professeur': professeur,
+        'classe': classe,
+        'matieres': matieres,
+    }
+
+    return render(request, 'teachers/professeur_info.html', context)
